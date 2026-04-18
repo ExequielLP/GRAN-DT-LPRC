@@ -79,48 +79,50 @@ public class SecurityConfig {
     @Autowired
     private CustomOAuth2SuccessHandler successHandler;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(sessionMagConfig -> sessionMagConfig
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(daoAuthenticationProvider)
-                .addFilterBefore(jwtAuthenticateFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(authRequestConfig -> {
-                    authRequestConfig.requestMatchers("/oauth2/**", "/login/**").permitAll();
-                    authRequestConfig.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll(); // Login con usuario y contraseña
-                    authRequestConfig.requestMatchers(WHITE_LIST_URL).permitAll();
-                    authRequestConfig.requestMatchers(HttpMethod.GET, "/adminController/listaServiciosAdmin")
-                            .hasRole(Role.ADMIN.name());
-                    authRequestConfig.requestMatchers(HttpMethod.POST,"/api/users/register").permitAll();
-                    authRequestConfig.anyRequest().authenticated();
-                })
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(successHandler) // Usa el CustomOAuth2SuccessHandler
-                )
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                        })
-                );
-        return http.build();
-    }
+   @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(sessionMagConfig -> sessionMagConfig
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authenticationProvider(daoAuthenticationProvider)
+            .addFilterBefore(jwtAuthenticateFilter, UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(authRequestConfig -> {
+                authRequestConfig.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                authRequestConfig.requestMatchers("/oauth2/**", "/login/**").permitAll();
+                authRequestConfig.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll();
+                authRequestConfig.requestMatchers(WHITE_LIST_URL).permitAll();
+                authRequestConfig.requestMatchers(HttpMethod.GET, "/adminController/listaServiciosAdmin")
+                        .hasRole(Role.ADMIN.name());
+                authRequestConfig.requestMatchers(HttpMethod.POST, "/api/users/register").permitAll();
+                authRequestConfig.anyRequest().authenticated();
+            })
+            .oauth2Login(oauth2 -> oauth2
+                    .successHandler(successHandler)
+            )
+            .exceptionHandling(exception -> exception
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                    })
+            );
 
+    return http.build();
+}
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setExposedHeaders(Arrays.asList("Set-Cookie"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+   @Bean
+CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://541f8xs1-5173.brs.devtunnels.ms"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(Arrays.asList("*"));
+    configuration.setAllowCredentials(true);
+    configuration.setExposedHeaders(Arrays.asList("Set-Cookie"));
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+}
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
