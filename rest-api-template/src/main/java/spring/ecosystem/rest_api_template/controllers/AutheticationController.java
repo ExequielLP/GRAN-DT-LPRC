@@ -9,18 +9,19 @@ import spring.ecosystem.rest_api_template.entities.User;
 import spring.ecosystem.rest_api_template.services.auth.AuthenticateService;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 public class AutheticationController {
     @Autowired
     private AuthenticateService autheticateService;
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDTO> authetication(@RequestBody AuthenticationRequestDTO authDTO) {
+        System.out.println(authDTO);
         AuthenticationResponseDTO auth = autheticateService.login(authDTO);
         return ResponseEntity.ok(auth);
     }
 
-    @GetMapping("validate")
+    @GetMapping("/validate")
     public ResponseEntity<Boolean> validate(@RequestParam String jwt) {
         boolean isValidate = autheticateService.validateToken(jwt);
         return ResponseEntity.ok(isValidate);

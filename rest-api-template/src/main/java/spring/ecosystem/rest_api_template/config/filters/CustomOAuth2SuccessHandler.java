@@ -47,8 +47,8 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .orElseGet(() -> {
                     User nuevoUsuario = new User();
                     nuevoUsuario.setEmail(email);
+                    nuevoUsuario.setFirstName(nombre);
                     nuevoUsuario.setPassword(passwordEncoder.encode("123456"));
-                    nuevoUsuario.setUserName(nombre);
                     nuevoUsuario.setRoles(Set.of(Role.USER)); // Asegúrate de que está bien definido
                     return usuarioRepository.save(nuevoUsuario); // Primero guardamos el usuario en la BD
                 });
@@ -67,7 +67,8 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         extraClaims.put("email", user.getEmail());
         extraClaims.put("role", user.getRoles());
         extraClaims.put("authorities", user.getAuthorities());
-        extraClaims.put("userName", user.getUserName());
+        extraClaims.put("userName", user.getUsername());
+        extraClaims.put("name",user.getFirstName());
         return extraClaims;
     }
 

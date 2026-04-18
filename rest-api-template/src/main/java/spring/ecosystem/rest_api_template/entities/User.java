@@ -1,12 +1,8 @@
 package spring.ecosystem.rest_api_template.entities;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,8 +16,6 @@ public class User extends Auditable implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(unique = true, nullable = false)
-    private String userName;
     private String firstName;
     private String lastName;
     @Column(unique = true, nullable = false)
@@ -32,14 +26,15 @@ public class User extends Auditable implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
-
+    private double puntosAcumulados;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Player> jugadoresDT;
     public User() {
     }
 
     public User(UUID id, String userName, String firstName, String lastName, String email, String password,
                 Set<Role> role) {
         this.id = id;
-        this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -103,13 +98,6 @@ public class User extends Auditable implements UserDetails {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getFirstName() {
         return firstName;

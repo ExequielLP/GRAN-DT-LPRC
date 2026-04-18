@@ -48,6 +48,5 @@ public class UserDTO {
         this.lastName = user.getLastName();
         this.password = user.getPassword();
         this.roles = user.getRoles();
-        this.userName = user.getUserName();
     }
 }

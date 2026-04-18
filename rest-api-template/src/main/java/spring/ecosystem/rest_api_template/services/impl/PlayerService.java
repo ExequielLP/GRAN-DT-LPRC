@@ -2,32 +2,37 @@ package spring.ecosystem.rest_api_template.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import spring.ecosystem.rest_api_template.dto.JugadoresDTO;
-import spring.ecosystem.rest_api_template.entities.Jugador;
-import spring.ecosystem.rest_api_template.enums.Posicion;
-import spring.ecosystem.rest_api_template.repositories.JugadoresRepository;
+import spring.ecosystem.rest_api_template.dto.PlayerDTO;
+import spring.ecosystem.rest_api_template.entities.Player;
+import spring.ecosystem.rest_api_template.enums.Position;
+import spring.ecosystem.rest_api_template.repositories.PlayerRepository;
 import spring.ecosystem.rest_api_template.services.interfaces.IJugadorService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
-public class JugadoresService implements IJugadorService {
+public class PlayerService implements IJugadorService {
 
     @Autowired
-    private JugadoresRepository jugadoresRepository;
+    private PlayerRepository playerRepository;
 
     @Override
-    public List<JugadoresDTO> listJugadoresDTO(Posicion posicion) {
+    public List<PlayerDTO> listJugadoresDTO(Position position) {
 
-        return jugadoresRepository.findByPosicion(posicion).stream().map(
-                jugador -> new JugadoresDTO(jugador.getFirstName(), jugador.getLastName())
+        return playerRepository.findByPosition(position).stream().map(
+                jugador -> new PlayerDTO(jugador.getId(), jugador.getFirstName(), jugador.getLastName(),jugador.getPosition())
         ).toList();
     }
 
+    @Override
+    public List<PlayerDTO> playerList() {
+        System.out.println("3333333");
+        System.out.println(playerRepository.findAll());
+        return playerRepository.findAll().stream().map(player -> new PlayerDTO(player.getId(),player.getFirstName(), player.getLastName(),player.getPosition())).toList();
+    }
 
-    public void registerPlayer(Jugador jugador) {
-        jugadoresRepository.save(new Jugador(jugador.getFirstName(), jugador.getLastName(), jugador.getPosicion(), jugador.getPuntaje(), jugador.getPartidosJugados()));
+
+    public void registerPlayer(Player jugador) {
+        playerRepository.save(new Player(jugador.getFirstName(), jugador.getLastName(), jugador.getPosition(), jugador.getPuntaje(), jugador.getPartidosJugados()));
     }
 }

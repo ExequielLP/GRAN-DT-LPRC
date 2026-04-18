@@ -4,14 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import spring.ecosystem.rest_api_template.enums.Posicion;
+import spring.ecosystem.rest_api_template.enums.Position;
 
 import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class player {
+public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -19,10 +19,10 @@ public class player {
     private String firstName;
     private String lastName;
     @Enumerated(EnumType.STRING)
-    private Posicion posicion;
+    private Position position;
     private double puntaje;
     private int partidosJugados;
 
-    public player(String firstName, String lastName, Posicion posicion, double puntaje, int partidosJugados) {
+    public Player(String firstName, String lastName, Position position, double puntaje, int partidosJugados) {
     }
 }

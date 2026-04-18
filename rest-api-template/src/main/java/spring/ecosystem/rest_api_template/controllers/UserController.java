@@ -1,6 +1,5 @@
 package spring.ecosystem.rest_api_template.controllers;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +35,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
 
     // Aca devolvemos todos sin paginar, podría servir para hacer un export de los
     // datos (CSV por ej.)
@@ -82,4 +77,6 @@ public class UserController {
     // new RuntimeException(e.getMessage());
     // }
     // }
+
+
 }

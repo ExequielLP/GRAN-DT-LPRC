@@ -100,9 +100,6 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(successHandler) // Usa el CustomOAuth2SuccessHandler
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(successHandler) // Usa el CustomOAuth2SuccessHandler
-                )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
