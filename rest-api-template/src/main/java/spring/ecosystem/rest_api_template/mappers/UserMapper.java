@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import spring.ecosystem.rest_api_template.dto.CreateUserDTO;
 import spring.ecosystem.rest_api_template.dto.UserDTO;
 import spring.ecosystem.rest_api_template.entities.User;
 
@@ -35,8 +34,8 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "isActive", ignore = true)
     @Mapping(target = "authorities", ignore = true) // Ignora authorities
-    User createUserDTOToUser(CreateUserDTO createUserDTO);
+    User createUserDTOToUser(UserDTO createUserDTO);
 
     // Mapea User → CreateUserDTO
-    CreateUserDTO userToCreateUserDTO(User user);
+    UserDTO userToCreateUserDTO(User user);
 }

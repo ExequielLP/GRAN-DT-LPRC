@@ -3,6 +3,7 @@ package spring.ecosystem.rest_api_template.entities;
 import java.util.*;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +12,7 @@ import spring.ecosystem.rest_api_template.enums.Role;
 
 @Entity
 @Table(name = "users")
+@Data
 public class User extends Auditable implements UserDetails {
 
     @Id
@@ -18,6 +20,7 @@ public class User extends Auditable implements UserDetails {
     private UUID id;
     private String firstName;
     private String lastName;
+    private String nameTeam;
     @Column(unique = true, nullable = false)
     private String email;
     @Column(nullable = false)
@@ -27,19 +30,21 @@ public class User extends Auditable implements UserDetails {
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
     private double puntosAcumulados;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Player> jugadoresDT;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Player> playersDT_list;
+
     public User() {
     }
 
-    public User(UUID id, String userName, String firstName, String lastName, String email, String password,
-                Set<Role> role) {
+    public User(UUID id, String firstName, String lastName, String email, String password,
+                Set<Role> role, String nameTeam) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.roles = role;
+        this.nameTeam = nameTeam;
     }
 
 

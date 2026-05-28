@@ -2,32 +2,45 @@ package spring.ecosystem.rest_api_template.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import spring.ecosystem.rest_api_template.dto.PlayerDTO;
 import spring.ecosystem.rest_api_template.dto.UserDTO;
 import spring.ecosystem.rest_api_template.entities.Player;
+import spring.ecosystem.rest_api_template.services.impl.AdminService;
 import spring.ecosystem.rest_api_template.services.impl.PlayerService;
 import spring.ecosystem.rest_api_template.services.impl.UserService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/apli/admin")
+@RequestMapping("/api/admin")
 public class AdminController {
     @Autowired
     private PlayerService jugadoresService;
     @Autowired
     private UserService userService;
-// vemos que hacemos aqui
+
+    @Autowired
+    private AdminService adminService;
+
+    // vemos que hacemos aqui
     public void registerPlayer(@RequestBody Player jugador) {
         jugadoresService.registerPlayer(jugador);
     }
 
-    @GetMapping("/listUser")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+//    @GetMapping("/listUser")
+//    public ResponseEntity<List<UserDTO>> getAllUsers() {
+//        return ResponseEntity.ok(userService.getAllUsers());
+//    }
+
+    @PostMapping("/postResultados")
+    public void postResult(@RequestBody List<PlayerDTO> listPlayers) {
+        adminService.procesarResultados(listPlayers);
     }
 
+    @GetMapping("/listUsers")
+    ResponseEntity<List<UserDTO>> listUsers() {
+        System.out.println(userService.listUser());
+        return ResponseEntity.ok(userService.listUser());
+    }
 }

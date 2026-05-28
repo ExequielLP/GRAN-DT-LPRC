@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 
 import spring.ecosystem.rest_api_template.dto.ChangePasswordDTO;
-import spring.ecosystem.rest_api_template.dto.CreateUserDTO;
 import spring.ecosystem.rest_api_template.dto.UserDTO;
 import spring.ecosystem.rest_api_template.entities.User;
 
@@ -20,7 +19,7 @@ public interface IUserService {
 
     Page<UserDTO> getUsersByPageSize(int page, int size);
 
-    UserDTO createUser(CreateUserDTO createUserDTO);
+    UserDTO createUser(UserDTO createUserDTO);
 
     User updateUser(UserDTO user, UUID id);
 
@@ -31,4 +30,9 @@ public interface IUserService {
     void deleteUser(UUID id);
 
     void changePassword(UUID id, ChangePasswordDTO changePasswordDTO);
+
+    List<UserDTO>listUser();
+
+
+
 }

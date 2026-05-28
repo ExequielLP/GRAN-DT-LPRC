@@ -14,5 +14,6 @@ public class PlayerDTO {
     private String firstName;
     private String lastName;
     private Position position;
+    private double puntaje;
 
 }

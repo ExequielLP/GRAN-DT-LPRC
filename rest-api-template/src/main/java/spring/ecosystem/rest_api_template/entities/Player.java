@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import spring.ecosystem.rest_api_template.dto.PlayerDTO;
 import spring.ecosystem.rest_api_template.enums.Position;
 
 import java.util.UUID;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +26,12 @@ public class Player {
     private int partidosJugados;
 
     public Player(String firstName, String lastName, Position position, double puntaje, int partidosJugados) {
+    }
+
+    public Player(PlayerDTO auxDTO) {
+        this.id = auxDTO.getId();
+        this.firstName = auxDTO.getFirstName();
+        this.lastName = auxDTO.getLastName();
+        this.position = auxDTO.getPosition();
     }
 }

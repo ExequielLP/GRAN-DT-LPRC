@@ -1,5 +1,6 @@
 package spring.ecosystem.rest_api_template.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import spring.ecosystem.rest_api_template.dto.ChangePasswordDTO;
-import spring.ecosystem.rest_api_template.dto.CreateUserDTO;
+import spring.ecosystem.rest_api_template.dto.PlayerDTO;
 import spring.ecosystem.rest_api_template.dto.UserDTO;
 import spring.ecosystem.rest_api_template.services.impl.UserService;
 
@@ -46,7 +47,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@Validated @RequestBody CreateUserDTO createUserDTO) throws Exception {
+    public ResponseEntity<UserDTO> registerUser(@Validated @RequestBody UserDTO createUserDTO) throws Exception {
+        System.out.println(createUserDTO);
         return new ResponseEntity<>(userService.createUser(createUserDTO), HttpStatus.CREATED);
 
     }
@@ -58,6 +60,15 @@ public class UserController {
         userService.changePassword(id, changePasswordDTO);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/listPlayersForUser/{id}")
+    public ResponseEntity<Void>listPlayersForUser(@RequestBody List<PlayerDTO>list , @PathVariable String id){
+        userService.creatListPlayers(list,id);
+        return ResponseEntity.noContent().build(); // 204 No Content
+
+    }
+
+
 
     // @GetMapping("/upgrateProfile")
     // public void upgrateProfile(UserDTO userDTO, UUID id) {

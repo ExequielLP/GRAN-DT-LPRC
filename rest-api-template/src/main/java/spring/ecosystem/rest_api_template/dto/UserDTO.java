@@ -23,12 +23,12 @@ public class UserDTO {
     @NotBlank(message = "El apellido no puede estar en blanco.")
     private String lastName;
 
+    @NotBlank(message = "El nameTeam no puede estar en blanco.")
+    private String nameTeam;
+
     @Email(message = "El email debe ser válido.")
     private String email;
 
-    @NotBlank(message = "El nombre de usuario no puede estar en blanco")
-    @Size(min = 3, message = "El nombre de usuario debe contener al menos 3 caracteres.")
-    private String userName;
 
     @NotBlank(message = "La contraseña no puede estar en blanco.")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres.")
@@ -36,6 +36,8 @@ public class UserDTO {
 
     @NotNull(message = "El rol no puede ser nulo.")
     private Set<Role> roles = new HashSet<>();
+
+    private double puntosAcumulados;
 
     public UserDTO() {
 
@@ -48,5 +50,7 @@ public class UserDTO {
         this.lastName = user.getLastName();
         this.password = user.getPassword();
         this.roles = user.getRoles();
+        this.puntosAcumulados = user.getPuntosAcumulados();
+        this.nameTeam = user.getNameTeam();
     }
 }

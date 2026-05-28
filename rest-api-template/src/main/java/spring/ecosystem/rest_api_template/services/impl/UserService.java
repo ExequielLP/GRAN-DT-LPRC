@@ -1,8 +1,6 @@
 package spring.ecosystem.rest_api_template.services.impl;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +14,13 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import spring.ecosystem.rest_api_template.dto.ChangePasswordDTO;
-import spring.ecosystem.rest_api_template.dto.CreateUserDTO;
+import spring.ecosystem.rest_api_template.dto.PlayerDTO;
 import spring.ecosystem.rest_api_template.dto.UserDTO;
+import spring.ecosystem.rest_api_template.entities.Player;
 import spring.ecosystem.rest_api_template.entities.User;
 import spring.ecosystem.rest_api_template.enums.Role;
 import spring.ecosystem.rest_api_template.mappers.UserMapper;
+import spring.ecosystem.rest_api_template.repositories.PlayerRepository;
 import spring.ecosystem.rest_api_template.repositories.UserRepository;
 import spring.ecosystem.rest_api_template.services.interfaces.IUserService;
 
@@ -33,6 +33,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @Override
     public UserDTO getUserById(UUID id) {
@@ -67,14 +70,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO createUser(CreateUserDTO createUserDTO) {
+    public UserDTO createUser(UserDTO createUserDTO) {
         User user = userMapper.createUserDTOToUser(createUserDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (createUserDTO.getRoles() == null) {
-            user.setRoles(Set.of(Role.USER));
-        } else {
-            user.setRoles(createUserDTO.getRoles());
-        }
+
+        user.setRoles(Set.of(Role.USER));
+
         user = userRepository.save(user);
         return userMapper.userToUserDTO(user);
     }
@@ -85,13 +86,14 @@ public class UserService implements IUserService {
                 .map(existingUser -> {
                     User user = new User(
                             existingUser.getId(),
-                            updatedUser.getUserName(),
                             updatedUser.getFirstName(),
                             updatedUser.getLastName(),
                             updatedUser.getEmail(),
                             updatedUser.getPassword() != null ? passwordEncoder.encode(updatedUser.getPassword())
                                     : existingUser.getPassword(),
-                            updatedUser.getRoles() != null ? updatedUser.getRoles() : existingUser.getRoles());
+                            updatedUser.getRoles() != null ? updatedUser.getRoles() : existingUser.getRoles(),
+                            updatedUser.getNameTeam());
+
                     return userRepository.save(user);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + id));
@@ -134,4 +136,37 @@ public class UserService implements IUserService {
                 });
     }
 
+    @Override
+    public List<UserDTO> listUser() {
+        return userRepository.findAll().stream().map(user -> userMapper.userToUserDTO(user)).toList();
+    }
+
+
+    public void creatListPlayers(List<PlayerDTO> list, String id) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("La lista de jugadores no puede ser nula o vacía");
+        }
+
+        UUID uuid = UUID.fromString(id);
+
+        User user = userRepository.findById(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + id));
+
+        List<UUID> playerIds = list.stream()
+                .map(PlayerDTO::getId)
+                .collect(Collectors.toList());
+
+        List<Player> players = playerRepository.findAllById(playerIds);
+
+        if (players.size() != playerIds.size()) {
+            throw new EntityNotFoundException("Algún jugador no fue encontrado en la base de datos");
+        }
+
+        user.getPlayersDT_list().clear();
+        user.getPlayersDT_list().addAll(players);
+        userRepository.save(user);
+    }
+
+
+// hay que probarlo ajjaa
 }
