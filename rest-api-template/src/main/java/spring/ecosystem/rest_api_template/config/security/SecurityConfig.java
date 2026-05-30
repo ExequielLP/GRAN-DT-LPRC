@@ -113,7 +113,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
    @Bean
 CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://541f8xs1-5173.brs.devtunnels.ms"));
+    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://541f8xs1-5173.brs.devtunnels.ms","https://gran-dt-lprc.onrender.com"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
     configuration.setAllowCredentials(true);
