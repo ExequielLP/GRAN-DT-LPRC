@@ -23,9 +23,8 @@ public class Player {
     @Enumerated(EnumType.STRING)
     private Position position;
     private double puntaje;
-    private int partidosJugados;
 
-    public Player(String firstName, String lastName, Position position, double puntaje, int partidosJugados) {
+    public Player(String firstName, String lastName, Position position, double puntaje) {
     }
 
     public Player(PlayerDTO auxDTO) {
@@ -34,4 +33,7 @@ public class Player {
         this.lastName = auxDTO.getLastName();
         this.position = auxDTO.getPosition();
     }
+
+
+
 }

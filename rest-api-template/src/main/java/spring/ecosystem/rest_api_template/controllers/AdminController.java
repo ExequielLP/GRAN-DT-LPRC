@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class AdminController {
     @Autowired
-    private PlayerService jugadoresService;
+    private PlayerService playerService;
     @Autowired
     private UserService userService;
 
@@ -24,8 +24,9 @@ public class AdminController {
     private AdminService adminService;
 
     // vemos que hacemos aqui
-    public void registerPlayer(@RequestBody Player jugador) {
-        jugadoresService.registerPlayer(jugador);
+    @PostMapping("/createPlayer")
+    public void registerPlayer(@RequestBody PlayerDTO playerDTO) {
+        playerService.registerPlayer(playerDTO);
     }
 
 //    @GetMapping("/listUser")
@@ -43,4 +44,7 @@ public class AdminController {
         System.out.println(userService.listUser());
         return ResponseEntity.ok(userService.listUser());
     }
+
+
 }
+
